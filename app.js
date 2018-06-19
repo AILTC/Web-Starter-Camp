@@ -12,11 +12,12 @@ app.use(bodyParser.json({ type: 'applictaion/json' }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(require('serve-static')(path.join(__dirname, 'public')))
 
-app.get('/hello', function (req, res) {
+// REST API
+app.get('/1/hello', function (req, res) {
   res.json({msg: 'Hello World'})
 })
 
-app.post('/hello', function (req, res) {
+app.post('/1/hello', function (req, res) {
   if (req.body.name) {
     res.json({msg: 'Hi! ' + req.body.name + '.'})
   } else {
@@ -24,18 +25,29 @@ app.post('/hello', function (req, res) {
   }
 })
 
-app.get('/weathers/5', function (req, res) {
-  request('https://works.ioa.tw/weather/api/weathers/5.json', function (error, response, body) {
+app.get('/1/classes', function (req, res) {
+  request('http://140.92.88.141/1/classes', function (error, response, body) {
     res.json(JSON.parse(body))
   })
 })
 
+app.get('/1/class/:id', function (req, res) {
+  request('http://140.92.88.141/1/class/' + req.params.id, function (error, response, body) {
+    res.json(JSON.parse(body))
+  })
+})
+
+// frontend
 app.get('/',function(req,res){
   res.render('index',{msg:'Hello World!'})
 })
 
-app.get('/class',function(req,res){
-  res.render('class')
+app.get('/classes',function(req,res){
+  res.render('classes')
+})
+
+app.get('/class/:id',function(req,res){
+  res.render('class', {id: req.params.id})
 })
 
 app.listen(3000, function () {
